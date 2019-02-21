@@ -273,8 +273,16 @@ UniversalDApp.prototype.runTx = function (args, confirmationCb, continueCb, prom
         next(null, address, value, gasLimit)
       })
     },
-    function runTransaction (fromAddress, value, gasLimit, next) {
-      var tx = { to: args.to, data: args.data.dataHex, useCall: args.useCall, from: fromAddress, value: value, gasLimit: gasLimit }
+    function getPrivateFor (fromAddress, value, gasLimit, next) {
+      if (self.transactionContextAPI.getPrivateFor) {
+        return self.transactionContextAPI.getPrivateFor(function (err, priv) {
+          next(err, priv, fromAddress, value, gasLimit)
+        })
+      }
+      next(null, null, fromAddress, value, gasLimit)
+    },
+    function runTransaction (privateFor, fromAddress, value, gasLimit, next) {
+      var tx = { privateFor: privateFor, to: args.to, data: args.data.dataHex, useCall: args.useCall, from: fromAddress, value: value, gasLimit: gasLimit }
       var payLoad = { funAbi: args.data.funAbi, funArgs: args.data.funArgs, contractBytecode: args.data.contractBytecode, contractName: args.data.contractName, contractABI: args.data.contractABI, linkReferences: args.data.linkReferences }
       var timestamp = Date.now()
 

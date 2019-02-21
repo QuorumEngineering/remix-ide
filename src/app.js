@@ -467,6 +467,19 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
     },
     getGasLimit: (cb) => {
       cb(null, $('#gasLimit').val())
+    },
+    getPrivateFor: (cb) => {
+      var privateForIsActive = $('#privateForActive').is(':checked')
+
+      if (privateForIsActive) {
+        var resolvedPrivateFor = $('#privateFor').val()
+          .split(',')
+          .filter(key => key !== '')
+          .map(key => key.replace('\n', ''))
+        cb(null, resolvedPrivateFor)
+      } else {
+        cb(null, null)
+      }
     }
   }
   udapp.resetAPI(transactionContextAPI)

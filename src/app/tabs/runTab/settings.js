@@ -103,12 +103,21 @@ class SettingsUI {
       </div>
     `
 
+    var privateForEl = yo`
+      <div class="${css.crow}">
+        <div class="${css.col1_1}">Private for</div>
+        <textarea class="${css.col2_1}" id="privateFor"></textarea>
+        <input type="checkbox" class="${css.col2_2}" id="privateForActive" value="">
+      </div>
+    `
+
     var el = yo`
       <div class="${css.settings}">
         ${environmentEl}
         ${accountEl}
         ${gasPriceEl}
         ${valueEl}
+        ${privateForEl}
       </div>
     `
 
