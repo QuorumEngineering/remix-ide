@@ -128,6 +128,8 @@ class SettingsUI {
       this.setFinalContext()
     })
 
+    setInterval(function () { SettingsUI.disablePrivateFor(selectExEnv) }, 1000)
+
     setInterval(() => {
       this.updateNetwork()
       this.fillAccountsList()
@@ -135,6 +137,22 @@ class SettingsUI {
 
     this.el = el
     return el
+  }
+
+  static disablePrivateFor (selectExEnv) {
+    let context = selectExEnv.options[selectExEnv.selectedIndex].value
+
+    var privateForActive = $('#privateForActive')
+    var privateForText = $('#privateFor')
+
+    if (context === 'injected') {
+      privateForActive.prop('checked', context !== 'injected')
+      privateForText.val('Cannot use with Injected Web3')
+    } else {
+      privateForText.val('')
+    }
+    privateForActive.prop('disabled', context === 'injected')
+    privateForText.prop('disabled', context === 'injected')
   }
 
   setDropdown (selectExEnv) {
@@ -158,6 +176,9 @@ class SettingsUI {
 
     selectExEnv.addEventListener('change', (event) => {
       let context = selectExEnv.options[selectExEnv.selectedIndex].value
+
+      SettingsUI.disablePrivateFor(selectExEnv)
+
       this.settings.changeExecutionContext(context, () => {
         modalDialogCustom.confirm(null, 'Are you sure you want to connect to an ethereum node?', () => {
           modalDialogCustom.prompt(null, 'Web3 Provider Endpoint', 'http://localhost:8545', (target) => {
