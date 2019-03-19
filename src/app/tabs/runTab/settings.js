@@ -146,9 +146,9 @@ class SettingsUI {
     var privateForText = $('#privateFor')
 
     if (context === 'injected') {
-      privateForActive.prop('checked', context !== 'injected')
+      privateForActive.prop('checked', false)
       privateForText.val('Cannot use with Injected Web3')
-    } else {
+    } else if (privateForText.val() === 'Cannot use with Injected Web3') {
       privateForText.val('')
     }
     privateForActive.prop('disabled', context === 'injected')
