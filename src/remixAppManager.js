@@ -207,8 +207,8 @@ export class RemixAppManager extends PluginEngine {
       description: 'Deploy and interact with private contracts on a Quorum network.',
       events: [],
       methods: [],
-      url: '//remix-plugin.goquorum.com/',
-      icon: '//remix-plugin.goquorum.com/tab_icon.png',
+      url: '//remix-plugin-staging.goquorum.com/',
+      icon: '//remix-plugin-staging.goquorum.com/tab_icon.png',
       documentation: 'https://docs.goquorum.com/en/latest/RemixPlugin/Overview/',
       version: '0.1.4-beta',
       location: 'sidePanel'
