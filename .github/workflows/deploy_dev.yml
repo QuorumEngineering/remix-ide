@@ -28,7 +28,7 @@ jobs:
       - name: Checkout remix-dev master
         uses: actions/checkout@v2
         with:
-          repository: remix-dev
+          repository: quorumengineering/remix-ide-original
           ref: master
       - name: Set up build files based on gh-pages for commit
         run: |
