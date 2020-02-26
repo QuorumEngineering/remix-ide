@@ -1,0 +1,53 @@
+name: Create Dev Deployment PR
+
+on:
+  push:
+    branches:
+      - QuorumDev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+      - name: Use Node.js 10.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - name: Build plugin
+        run: |
+          npm install
+          npm build
+          echo "Copying build files to temp folder or it will be wiped out when we checkout gh-pages actions up to date"
+          mkdir ../build
+          mv assets background.js build icon.png index.html manifest.json README.md soljson.js ../build
+          echo "Setting environment variable COMMIT_SHA to the shortened hash of the current commit: ${GITHUB_SHA::8}"
+          echo "::set-env name=COMMIT_SHA::${GITHUB_SHA::8}"
+      - name: Checkout remix-dev master
+        uses: actions/checkout@v2
+        with:
+          repository: remix-dev
+          ref: master
+      - name: Set up build files based on gh-pages for commit
+        run: |
+          rm -rf *
+          mv ../build/* ./
+          echo "remix-dev.goquorum.com" > CNAME
+          echo "Deployment of remix-ide to http://remix-dev.goquorum.com" > README.md
+          echo "Deployment of remix-ide at commit $COMMIT_SHA to http://remix-dev.goquorum.com" > README.md
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v2
+        with:
+          title: "[Dev Release] Merge to remix-dev.goquorum.com"
+          commit-message: "Build of #${{ env.COMMIT_SHA }}"
+          body: |
+            This pull request will update with any new commits to the QuorumDev branch. It is currently at ${{ env.COMMIT_SHA }}
+
+            When ready for release, merge this pull request to go live at remix-dev.goquorum.com
+
+            You can delete the release/prod branch after merging.
+          base: master
+          branch: release/dev
+          token: ${{ secrets.GITHUB_TOKEN }}
